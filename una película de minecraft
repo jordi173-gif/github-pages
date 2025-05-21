@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minecraft: La Película - Netflix</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        body, html {
+            height: 100%;
+            width: 100%;
+            background-color: #141414;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        .movie-container {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        .movie-backdrop {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, #141414 15%, transparent 85%),
+                        linear-gradient(to right, #141414 25%, transparent 75%),
+                        url('https://image.tmdb.org/t/p/original/4xJ6FLjX4uYI7wcD8YxQrQu9Sxd.jpg') no-repeat center center/cover;
+            z-index: 1;
+        }
+
+        .movie-content {
+            position: relative;
+            z-index: 2;
+            padding: 5% 5% 10% 5%;
+            max-width: 100%;
+        }
+
+        .movie-title {
+            font-size: clamp(2rem, 5vw, 4rem);
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            color: #6BCF63;
+        }
+
+        .movie-meta {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            font-size: clamp(0.8rem, 1.5vw, 1rem);
+            color: #d2d2d2;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .movie-overview {
+            font-size: clamp(0.9rem, 1.8vw, 1.1rem);
+            line-height: 1.5;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .btn-play {
+            padding: 0.6rem 1.5rem;
+            border-radius: 4px;
+            font-size: clamp(0.9rem, 1.5vw, 1rem);
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: none;
+            background-color: #6BCF63;
+            color: #fff;
+            transition: all 0.2s ease;
+        }
+
+        .btn-play:hover {
+            background-color: #5AB552;
+            transform: scale(1.05);
+        }
+
+        .cast-crew {
+            font-size: clamp(0.8rem, 1.5vw, 0.9rem);
+            color: #d2d2d2;
+        }
+
+        .cast-crew p {
+            margin-bottom: 0.5rem;
+        }
+
+        .minecraft-rating {
+            display: inline-flex;
+            align-items: center;
+            background-color: rgba(107, 207, 99, 0.2);
+            padding: 0.3rem 0.8rem;
+            border-radius: 4px;
+            border-left: 3px solid #6BCF63;
+        }
+
+        /* Estilos para el reproductor */
+        .video-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            z-index: 1000;
+        }
+
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            padding-top: 56.25%; /* Relación 16:9 */
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 20px;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        @media (max-width: 768px) {
+            .movie-content {
+                padding: 10% 5% 15% 5%;
+            }
+            
+            .movie-overview {
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .movie-title {
+                font-size: 2rem;
+            }
+            
+            .movie-meta {
+                font-size: 0.9rem;
+            }
+            
+            .btn-play {
+                padding: 0.5rem 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="movie-container">
+        <div class="movie-backdrop"></div>
+        <div class="movie-content">
+            <h1 class="movie-title">MINECRAFT: LA PELÍCULA</h1>
+            <div class="movie-meta">
+                <span>2025</span>
+                <span>1h 45min</span>
+                <span>HD</span>
+                <span class="minecraft-rating">Apto para todos</span>
+            </div>
+            <div class="action-buttons">
+                <button class="btn-play" id="playButton">
+                    <span>▶</span> Reproducir
+                </button>
+            </div>
+            <p class="movie-overview">
+                Una aventura épica basada en el popular videojuego. Cuando un héroe común es arrastrado al mundo de Minecraft, debe aprender las reglas de este universo pixelado para sobrevivir y salvar a sus nuevos amigos de una amenaza que podría destruir todo su mundo.
+            </p>
+            <div class="cast-crew">
+                <p><strong>Reparto:</strong> Jason Momoa, Jack Black, Danielle Brooks</p>
+                <p><strong>Géneros:</strong> Aventura, Fantasía, Familiar</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reproductor de video -->
+    <div class="video-container" id="videoContainer">
+        <button class="close-btn" id="closeBtn">×</button>
+        <div class="video-wrapper">
+            <iframe id="moviePlayer" src="" frameborder="0" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const playButton = document.getElementById('playButton');
+            const videoContainer = document.getElementById('videoContainer');
+            const closeBtn = document.getElementById('closeBtn');
+            const moviePlayer = document.getElementById('moviePlayer');
+
+            // URL del embed que proporcionaste
+            const videoUrl = 'https://unlimplay.com/embed/?SmRrbXZ0L01DQ0hiY21yQWdpZkhCV0lhdWNTcHRsUlhWcndXbnB6WGpKS0VHNTZLNUovWmEvb3d6VDJRRUdIMkl4UExteW1HRDVoTStGQ1UxYXVPUEZUczBpY1pYaGZpdXNCWVZ0aFlEdzRMQWMzdWVQNnVSWVlWY1Vad0QvOVE';
+
+            playButton.addEventListener('click', function() {
+                // Mostrar el reproductor y cargar el video
+                videoContainer.style.display = 'block';
+                moviePlayer.src = videoUrl;
+                document.body.style.overflow = 'hidden'; // Evitar scroll
+            });
+
+            closeBtn.addEventListener('click', function() {
+                // Ocultar el reproductor y pausar el video
+                videoContainer.style.display = 'none';
+                moviePlayer.src = '';
+                document.body.style.overflow = 'auto'; // Restaurar scroll
+            });
+
+            // Cerrar al hacer clic fuera del video
+            videoContainer.addEventListener('click', function(e) {
+                if (e.target === videoContainer) {
+                    videoContainer.style.display = 'none';
+                    moviePlayer.src = '';
+                    document.body.style.overflow = 'auto';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
